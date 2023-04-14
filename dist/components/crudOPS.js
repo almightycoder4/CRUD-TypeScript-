@@ -10,44 +10,112 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const connection = require("../connectDB/connectDB");
+const { updateName, updatefthName } = require("./updateOPS");
 function getData(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        let sql = "SELECT * from students";
-        connection.query(sql, (err, result) => {
-            if (err)
-                return res.send({
-                    message: result,
+        try {
+            let sql = "SELECT * from students";
+            connection.query(sql, (err, result) => {
+                if (err) {
+                    res.send({
+                        message: result,
+                    });
+                }
+                res.send({
+                    data: result,
                 });
-            res.send({
-                data: result,
             });
-        });
+        }
+        catch (error) {
+            console.log(error);
+            res.status(500).send({
+                message: "Fatal error",
+            });
+        }
     });
 }
 function addData(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { id, name, course, fthname, admiyear } = req.body;
-        let sql = `INSERT INTO students (std_id, std_name, std_course, std_father, std_admiyear) VALUES (${id},"${name}","${course}","${fthname}",${admiyear})`;
-        connection.query(sql, (err, result) => {
-            if (err) {
-                res.status(406).send({
-                    message: err,
+        try {
+            const { id, name, course, fthname, admiyear } = req.body;
+            let sql = `INSERT INTO students (std_id, std_name, std_course, std_father, std_admiyear) VALUES (${id},"${name}","${course}","${fthname}",${admiyear})`;
+            connection.query(sql, (err, result) => {
+                if (err) {
+                    res.status(406).send({
+                        message: err,
+                    });
+                }
+                res.status(201).send({
+                    message: "Data Added Sucessfully.",
                 });
-                return connection.release();
-            }
-            res.status(201).send({
-                message: "Data Added Sucessfully.",
             });
-        });
+        }
+        catch (error) {
+            console.log(error);
+            res.status(500).send({
+                message: "Fatal error",
+            });
+        }
     });
 }
 function patchData(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { id } = req.params;
-        console.log(req.params.id);
+        try {
+            if (req.query.type === "stdName") {
+                updateName(req.query.id, req.query.newName, (result) => {
+                    if (result === 0) {
+                        res.status(200).send({
+                            message: "Already Updated or Not Found in Database",
+                        });
+                    }
+                    res.status(200).send({
+                        message: "Student Id Updated!!!",
+                    });
+                });
+            }
+            ///////////////// Update Student's Father Name in DB//////////////////////////
+            if (req.query.type === "fthName") {
+                updatefthName(req.query.std_id, req.query.std_fthName, (result) => {
+                    if (result === 0) {
+                        res.status(200).send({
+                            message: "Already Updated or Not Found in Database",
+                        });
+                    }
+                    res.status(200).send({
+                        message: "Student's Father Name Updated!!!",
+                    });
+                });
+            }
+        }
+        catch (error) {
+            console.log(error);
+            res.status(500).send({
+                message: "Fatal error",
+            });
+        }
     });
 }
-function delData() {
-    return __awaiter(this, void 0, void 0, function* () { });
+function delData(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            let sql = `DELETE from students WHERE std_id=${req.query.id}`;
+            connection.query(sql, (err, result) => {
+                if (err) {
+                    res.send({
+                        message: result,
+                    });
+                }
+                res.send({
+                    data: result,
+                });
+            });
+        }
+        catch (error) {
+            console.log(error);
+            res.status(500).send({
+                message: "Fatal error",
+            });
+        }
+    });
 }
 module.exports = { getData, addData, patchData, delData };

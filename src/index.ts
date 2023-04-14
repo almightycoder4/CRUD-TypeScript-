@@ -3,8 +3,9 @@ const router = require("./routes/routes");
 const morgan = require("morgan");
 const cors = require("cors");
 const app: Application = express();
-app.use(morgan("tiny"));
 app.use(express.json());
+app.use(morgan("tiny"));
+app.use(cors());
 app.use("/", router);
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
   console.log(req.body);

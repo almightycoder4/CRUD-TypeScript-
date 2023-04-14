@@ -8,8 +8,9 @@ const router = require("./routes/routes");
 const morgan = require("morgan");
 const cors = require("cors");
 const app = (0, express_1.default)();
-app.use(morgan("tiny"));
 app.use(express_1.default.json());
+app.use(morgan("tiny"));
+app.use(cors());
 app.use("/", router);
 app.get("/", (req, res, next) => {
     console.log(req.body);

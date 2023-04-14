@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const { getData, addData, patchData, delData, } = require("../components/crudOPS");
+const router = (0, express_1.Router)();
+router.get("/getData", getData);
+router.post("/addStd", addData);
+router.patch("/updateData", patchData);
+router.delete("/delData", delData);
+module.exports = router;

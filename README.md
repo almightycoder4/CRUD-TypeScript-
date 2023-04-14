@@ -2,7 +2,7 @@
 
 This is a TypeScript-based Express server project that performs CRUD operations on a MySQL database.
 
-#### API is Live on : https://imgtojson.netlify.app/
+#### API is Live on : https://island-fuchsia-impala.glitch.me/
 
 This is a free Glitch Server which takes 30s-50s to getting alive and then it ready to work.
 
